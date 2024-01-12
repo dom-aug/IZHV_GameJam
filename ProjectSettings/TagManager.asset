@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
+  - Despawn
+  - Spawn
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - Ground
   - Boundary
   - Obstacle
-  - 
-  - 
+  - Despawn
+  - Spawn
   - 
   - 
   - 

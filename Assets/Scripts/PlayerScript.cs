@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,7 @@ public class PlayerScript : MonoBehaviour
     {
         var horizontalMovement = Input.GetAxisRaw("Horizontal");
         var jumpMovement = Input.GetButtonDown("Jump");
+        var toggleTorch = Input.GetKeyDown(KeyCode.T);
         
         if (jumpMovement && isOnGround()) {
             playerRigidbody.velocity = - Physics.gravity * jumpForce;
@@ -50,7 +52,7 @@ public class PlayerScript : MonoBehaviour
         }
         playerAnimator.SetBool("Grounded", isOnGround());
 
-        if (horizontalMovement != 0) {            
+        if (horizontalMovement != 0 && Math.Abs(transform.position.x) < 4.5f) {            
             transform.position += new Vector3(horizontalMovement * speed, 0, 0);
         }
         playerAnimator.SetFloat("MovementDirection", horizontalMovement);
@@ -70,7 +72,7 @@ public class PlayerScript : MonoBehaviour
 
         var boundsBottom = new Vector3(boundsCenter.x, boundsCenter.y - boundsSize.y / 2, boundsCenter.z);
 
-        var hit = Physics.Raycast(boundsBottom, Vector3.down, 0.1f, groundLayer);
+        var hit = Physics.Raycast(boundsBottom, Vector3.down, 0.2f, groundLayer);
 
         return hit;
     }
