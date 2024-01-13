@@ -24,14 +24,33 @@ public class EnvironmentObjectScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManagerScript.Instance.gameStarted) {
+            return;
+        }
+        
+        if (transform.position.z < -300) {
+            Destroy(gameObject);
+        }
+
+        speed = GameManagerScript.Instance.gameSpeed;
         transform.position += direction * speed * Time.deltaTime;
     }
 
-    // despawn on collision with despawn layer
+    void OnBecameInvisible() {
+        //Destroy(gameObject);
+    }
+
+     // despawn on collision with despawn layer
+    /* void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Despawn")) {            
+            Destroy(gameObject);
+        }
+    } */
+
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.layer);
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Despawn")) {            
+        if (collision.gameObject.layer == LayerMask.NameToLayer("GroundTexture")) {
             Destroy(gameObject);
         }
     }

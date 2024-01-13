@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class SpawnerScript : MonoBehaviour
+public class SpawnerScript : SpawnerBase
 {
     public float spawnFrequencyMean = 1.0f;
     public float spawnFrequencyStd = 0.5f;
@@ -28,6 +28,12 @@ public class SpawnerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (spawnEnabled == false)
+        {
+            return;
+        }
+
+        
         if (spawnObstacles)
         { // Check if we should spawn.
             spawnAccumulator += Time.deltaTime;
@@ -86,5 +92,6 @@ public class SpawnerScript : MonoBehaviour
 
         obstacle.AddComponent<EnvironmentObjectScript>();
         obstacle.AddComponent<BoxCollider>();
+        obstacle.layer = LayerMask.NameToLayer("Obstacle");
     }
 }

@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Screen" style="flex-grow: 0; flex-direction: column; height: 100%; width: 100%;">
+        <ui:VisualElement name="GamePlay" style="flex-grow: 1; height: 100%; width: 100%; position: absolute; visibility: hidden; top: -2px; left: 0; -unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&apos;);">
+            <ui:VisualElement name="Score" style="flex-grow: 1; height: 100%; width: 100%;">
+                <ui:Label tabindex="-1" text="Distance" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Score" style="font-size: 38px; height: 83px; width: 175px; left: 2%; top: 2%; -unity-font-style: bold; -unity-text-outline-width: 0; -unity-text-outline-color: rgba(255, 255, 255, 0);" />
+                <ui:Label tabindex="-1" text="0000" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ScoreValue" style="font-size: 32px; height: 83px; width: 175px; left: 2%; top: 2%; -unity-font-style: bold; -unity-text-align: upper-right; -unity-text-outline-width: 0; -unity-text-outline-color: rgba(255, 255, 255, 0);" />
+            </ui:VisualElement>
+            <ui:ProgressBar value="100" title="Torch" name="TorchLife" style="justify-content: flex-end; width: 200px; left: auto; top: auto; bottom: 5%; right: auto; font-size: 26px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="MainMenu" tabindex="1" style="flex-grow: 1; height: 100%; position: absolute; width: 100%; align-items: center;">
+        <ui:Label tabindex="-1" text="Marathon Runner" parse-escape-sequences="true" display-tooltip-when-elided="true" style="width: 734px; font-size: 80px; -unity-font-style: bold; height: 83px; align-items: auto; top: 15%; align-self: auto;" />
+        <ui:Button text="Start Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="StartButton" style="width: 279px; left: auto; top: 30%; justify-content: center; align-self: center; font-size: 22px; -unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&apos;);" />
+        <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitButton" style="width: 279px; left: auto; top: 40%; justify-content: center; align-self: center; font-size: 22px; -unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&apos;);" />
+    </ui:VisualElement>
+</ui:UXML>
