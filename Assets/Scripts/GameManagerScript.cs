@@ -1,19 +1,60 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameManagerScript : MonoBehaviour
 {
-    private LocationType locationType = LocationType.Country;
-    private float locationChangeFrequencyMean = 10.0f;
-    private float locationChangeFrequencyStd = 5.0f;
+    public float gameSpeed = 0.0f;
 
-    private enum LocationType
+    private float currentScore = 0.0f;
+    public bool gameLost = false;
+    public bool gameStarted = false;
+
+    private float thresholdIncrease = 10.0f;
+    private float thresholdAccumulator = 0.0f;
+
+    private static GameManagerScript thisInstance;
+     public static GameManagerScript Instance
     {
-        Country,
-        Town
+        get
+        {
+            return thisInstance;
+        }
     }
-    
+
+    private Label scoreLabelReference;
+
+    private Button startButtonReference;
+    private Button exitButtonReference;
+
+
+    private void Awake()
+    {
+        // Initialize the singleton instance, if no other exists.
+        if (thisInstance != null && thisInstance != this)
+        {
+            Destroy(gameObject);
+        } else {
+            thisInstance = this;
+        }
+
+        var uiGameObject = GameObject.Find("UI");
+        scoreLabelReference = uiGameObject.GetComponent<UIDocument>().rootVisualElement.Q<Label>("ScoreValue");
+
+        thresholdAccumulator = thresholdIncrease;
+
+        startButtonReference = uiGameObject.GetComponent<UIDocument>().rootVisualElement.Q<Button>("StartButton");
+        startButtonReference.RegisterCallback<ClickEvent>(ev => onStartGame());
+
+        exitButtonReference = uiGameObject.GetComponent<UIDocument>().rootVisualElement.Q<Button>("ExitButton");
+        exitButtonReference.RegisterCallback<ClickEvent>(ev => onGameExit());
+
+        Debug.Log("Game manager awake");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +64,79 @@ public class GameManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!gameStarted) {
+            return;
+        }
+
+        //if (gameStarted && !gameLost)
+        //{
+            currentScore += Time.deltaTime;
+        //}
+        scoreLabelReference.text = $"{currentScore:0.00}";
         
+        if (currentScore > thresholdAccumulator) {
+            gameSpeed += 1f;
+            thresholdAccumulator += thresholdIncrease;
+        }
+
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoseGame()
+    {
+        gameLost = true;
+        gameSpeed = 0.0f;
+        gameStarted = false;
+
+        GameObject.Find("PathSpawner").GetComponent<PathSpawner>().spawnEnabled = false;
+        GameObject.Find("ObstacleSpawner").GetComponent<SpawnerScript>().spawnEnabled = false;
+    }
+
+    public void onStartGame()
+    {
+        Debug.Log("Game started");
+
+        //show score and torch life
+        var uiGameObject = GameObject.Find("UI").GetComponent<UIDocument>().rootVisualElement;
+        var mainMenu = uiGameObject.Q<VisualElement>("MainMenu");
+        mainMenu.visible = false;
+        var gamePlay = uiGameObject.Q<VisualElement>("GamePlay");
+        gamePlay.visible = true;
+
+        //rotate camera
+        var camera = GameObject.Find("Main Camera");
+        camera.GetComponent<Animator>().SetBool("gameStarted", true);
+        camera.transform.rotation = new Quaternion(0, -5f, 0, 0);
+
+
+        // set bool variables
+        gameStarted = true;
+        gameLost = false;
+
+        // reset score, speed
+        currentScore = 0.0f;
+        gameSpeed = 10.0f;
+
+        GameObject.Find("PathSpawner").GetComponent<PathSpawner>().spawnEnabled = true;
+        GameObject.Find("ObstacleSpawner").GetComponent<SpawnerScript>().spawnEnabled = true;
+
+        gameSpeed = 10.0f;
+    }
+
+    public void onGameExit()
+    {
+        Debug.Log("Game exited");
+
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #elif UNITY_WEBGL || UNITY_WEBPLAYER
+            Application.OpenURL("#");
+        #else
+            Application.Quit();
+        #endif
     }
 }
