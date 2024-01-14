@@ -27,9 +27,15 @@ public class EnvironmentObjectScript : MonoBehaviour
         if (!GameManagerScript.Instance.gameStarted) {
             return;
         }
+
         
         if (transform.position.z < -300) {
-            Destroy(gameObject);
+            if (gameObject.tag == "DoNotDestroy")
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 50);
+            } else {
+                Destroy(gameObject);
+            }
         }
 
         speed = GameManagerScript.Instance.gameSpeed;

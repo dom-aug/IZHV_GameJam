@@ -42,7 +42,7 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         speed = GameManagerScript.Instance.gameSpeed;
-        playerAnimator.SetFloat("Speed", speed/10f);
+        playerAnimator.SetFloat("Speed", Math.Min(speed/10f, 3f));
 
         var horizontalMovement = Input.GetAxisRaw("Horizontal");
         var jumpMovement = Input.GetButtonDown("Jump");
@@ -90,23 +90,58 @@ public class PlayerScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == obstacleLayerMask) {            
-            var boundsSize = playerBoxCollider.bounds.size;
+        if (collision.gameObject.layer == obstacleLayerMask)
+        {
+            /* var boundsSize = playerBoxCollider.bounds.size/2;
             var boundsCenter = playerBoxCollider.bounds.center;
 
             var boundsBottom = new Vector3(boundsCenter.x, boundsCenter.y - boundsSize.y / 2, boundsCenter.z);
 
-            var hit = Physics.Raycast(boundsCenter, Vector3.forward, 0.2f, obstacleLayer);
+            //var hit = Physics.Raycast(boundsCenter, Vector3.forward, 0.2f, obstacleLayer);
 
-            //var hit = Physics.BoxCast(boundsCenter, boundsSize, Vector3.forward, transform.rotation, 0.2f, obstacleLayer);
+            var hit = Physics.BoxCast(boundsCenter, boundsSize, Vector3.back, transform.rotation, 2f, obstacleLayerMask);
 
-            if (hit) {
-                Debug.Log("hit obstacle");
+            if (hit) { */
+                /* Debug.Log("hit obstacle");
                 //game over
                 GameManagerScript.Instance.LoseGame();
                 playerAnimator.SetBool("GameOver", true);
+
+                // play hit sound
+                var audioSource = GetComponent<AudioSource>();
+                audioSource.Play(); */
+           // }
+
+            var obstacleObject = collision.gameObject;
+
+            if (obstacleObject.GetComponent<BoxCollider>() == null) {
+                return;
             }
-            
+
+            var obstacleCenterY = obstacleObject.GetComponent<BoxCollider>().center.y;
+            var obstacleSizeY = obstacleObject.GetComponent<BoxCollider>().size.y;
+
+            var obstacleTop = obstacleObject.transform.position.y + obstacleCenterY + obstacleSizeY / 2;
+
+            var playerCenterY = playerBoxCollider.center.y;
+            var playerSizeY = playerBoxCollider.size.y;
+
+            var playerBottom = transform.position.y + playerCenterY - playerSizeY / 2;
+
+            if (playerBottom + 0.2f > obstacleTop) {
+                return;
+            }
+
+            Debug.Log("hit obstacle " + playerBottom + " " + obstacleTop);
+            Debug.Log("obstacle identity " + obstacleObject.name);
+
+            //game over
+            GameManagerScript.Instance.LoseGame();
+            playerAnimator.SetBool("GameOver", true);
+
+            // play hit sound
+            var audioSource = GetComponent<AudioSource>();
+            audioSource.Play();
         }
     }
 }

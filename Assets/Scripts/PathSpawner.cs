@@ -46,7 +46,7 @@ public class PathSpawner : SpawnerBase
 
     public void spawnTrio()
     {
-        spawnRoad();
+        //spawnRoad();
         spawnSurroundings();
     }
 
