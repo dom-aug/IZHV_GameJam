@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,14 +25,14 @@ public class TorchScript : MonoBehaviour
     void Update()
     {
         if (torchLight.enabled) {
-            torchLife -= Time.deltaTime * GameManagerScript.Instance.gameSpeed / 5.0f;
+            torchLife -= Time.deltaTime * Math.Max(GameManagerScript.Instance.gameSpeed / 10.0f, 2);
 
             if (torchLife <= 0.0f) {
                 torchLight.enabled = false;
             }
         } else {
             if (torchLife <= 100.0f) {
-                torchLife += 0.01f;
+                torchLife += 0.05f;
             }
         }
 
